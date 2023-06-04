@@ -15,7 +15,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await Get.putAsync<StorageService>(() => StorageService().init());
-  
+
   Get.put<ConfigStore>(ConfigStore());
   Get.put<UserStore>(UserStore());
   runApp(const MyApp());
@@ -32,13 +32,12 @@ class MyApp extends StatelessWidget {
         minTextAdapt: true,
         splitScreenMode: true,
         builder: ((context, child) => GetMaterialApp(
-              initialRoute: AppRoutes.INITIAL,
+              initialRoute: AppRoutes.SIGN_IN,
               getPages: AppPages.routes,
               debugShowCheckedModeBanner: false,
               theme: ThemeData(
-                primarySwatch: Colors.green,
+                primarySwatch: Colors.purple,
               ),
             )));
   }
 }
- 

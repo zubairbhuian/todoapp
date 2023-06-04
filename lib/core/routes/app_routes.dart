@@ -9,5 +9,4 @@ class AppRoutes {
   static const TODO = "/todo";
   static const PAYMENT = "/payment";
   static const PRODUCTS = "/products";
-  static const PRODUCT = "/product";
 }
