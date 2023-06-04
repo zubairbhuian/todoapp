@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:todoapp/core/utils/app_constant.dart';
 
 class ApplicationController extends GetxController {
-  int pageIndex = 0;
+  int pageIndex = 1;
   List products = [];
   bool isLoading = false;
 
@@ -13,7 +13,6 @@ class ApplicationController extends GetxController {
     pageIndex = index;
     update();
   }
-
 
   fetechdata() async {
     isLoading = true;
