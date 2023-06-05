@@ -123,8 +123,12 @@ class LoginView extends GetView<LogInController> {
                         ),
                         CustomBtn(
                           onPressed: () async {
-                            // controller.handleEmailSignIn();
-                            Get.offAllNamed(AppRoutes.Application);
+                            try {
+                              controller.handleEmailSignIn();
+                              Get.offAllNamed(AppRoutes.Application);
+                            } catch (e) {
+                              customSnackbar(msg: '$e');
+                            }
                           },
                           title: 'Sign in',
                         ),

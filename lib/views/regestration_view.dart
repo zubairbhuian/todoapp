@@ -224,7 +224,7 @@ class RegestrationView extends GetWidget<RegestrationController> {
                     CustomBtn(
                       title: 'Sign Up',
                       onPressed: () async {
-                        // controller.handralRegester();
+                        controller.handralRegester();
                         Get.offAllNamed(AppRoutes.Application);
                         // if (controller.formKey.currentState!.validate()) {
 
@@ -252,7 +252,7 @@ class RegestrationView extends GetWidget<RegestrationController> {
                   TextSpan(
                       recognizer: TapGestureRecognizer()
                         ..onTap = () {
-                          Get.offNamed(AppPages.SIGN_IN);
+                          Get.back();
                         },
                       text: 'Log in',
                       style: const TextStyle(color: AppColor.primary))

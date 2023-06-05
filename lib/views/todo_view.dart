@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:todoapp/controllers/todo_controller.dart';
 import 'package:todoapp/core/utils/app_color.dart';
 import 'package:todoapp/widgets/custom_text.dart';
 
-class TodoView extends StatelessWidget {
+class TodoView extends GetView<TodoController> {
   const TodoView({super.key});
 
   @override
@@ -81,13 +83,55 @@ class TodoView extends StatelessWidget {
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                         padding: EdgeInsets.symmetric(vertical: 6.h)),
-                    onPressed: () {},
+                    onPressed: () {
+                      Get.defaultDialog(
+                        content: Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: Column(
+                            children: [
+                              TextField(
+                                controller: controller.todoTitle,
+                              ),
+                              TextField(
+                                controller: controller.todoDes,
+                              ),
+                              const SizedBox(
+                                height: 30,
+                              ),
+                              GetBuilder<TodoController>(
+                                  builder: (controller) => ElevatedButton(
+                                      onPressed: controller.isButtonDisabled
+                                          ? null
+                                          : () {
+                                              controller.addTodo(
+                                                  controller.uuid,
+                                                  controller.currentUser);
+                                            },
+                                      style: ElevatedButton.styleFrom(
+                                          backgroundColor: AppColor.primary),
+                                      child: controller.isButtonDisabled
+                                          ? const SizedBox(
+                                              width: 20,
+                                              height: 20,
+
+                                              // padding: const EdgeInsets.all(22.0),
+                                              child: CircularProgressIndicator(
+                                                  strokeWidth: 2),
+                                            )
+                                          : const Text('Add')))
+                            ],
+                          ),
+                        ),
+                      );
+                    },
                     child: const Icon(
                       Icons.add,
                       color: AppColor.white,
                     ),
                   ),
-                )
+                ),
+                GetBuilder<TodoController>(
+                    builder: (controller) => Text(controller.demo.toString()))
               ],
             ),
           ),

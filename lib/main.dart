@@ -10,6 +10,7 @@ import 'core/store/config.dart';
 import 'core/store/storage.dart';
 import 'core/store/user.dart';
 import 'firebase_options.dart';
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
@@ -31,7 +32,7 @@ class MyApp extends StatelessWidget {
         minTextAdapt: true,
         splitScreenMode: true,
         builder: ((context, child) => GetMaterialApp(
-              initialRoute: AppRoutes.Application,
+              initialRoute: AppRoutes.INITIAL,
               getPages: AppPages.routes,
               debugShowCheckedModeBanner: false,
               theme: ThemeData(
