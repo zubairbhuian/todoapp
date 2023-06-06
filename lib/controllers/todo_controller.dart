@@ -13,36 +13,50 @@ class TodoController extends GetxController {
   TextEditingController todoDes = TextEditingController();
   String uuid = const Uuid().v4();
   bool isButtonDisabled = false;
-  int demo = 0;
+  Map<String, dynamic> todosList = {};
 
-  // Add Todoes
-  addTodo(String refPath, String? userName) async {
+  // Add Todos
+  void addTodo(String refPath, String? userName) async {
     DatabaseReference ref =
-        FirebaseDatabase.instance.ref('todo').child(userName!).child(refPath);
+        FirebaseDatabase.instance.ref('todo').child(userName!).child(todoTitle.text);
     if (todoTitle.text.isNotEmpty && todoDes.text.isNotEmpty) {
       isButtonDisabled = true;
       update();
-      await ref.set({"title": todoTitle.text, "des": todoDes.text});
+      await ref.set({"id": refPath, "title": todoTitle.text, "des": todoDes.text});
       await Future.delayed(const Duration(seconds: 1));
       Get.back();
-      isButtonDisabled = true;
+      isButtonDisabled = false;
       update();
       todoTitle.clear();
       todoDes.clear();
       uuid = const Uuid().v4();
       customSnackbar(msg: "Todo Added");
     } else {
-      customSnackbar(msg: 'Do some thing');
+      customSnackbar(msg: "You can't emty the field");
     }
   }
+
 // Get Todo
+  void getTodos(String? userName) {
+    try {
+      DatabaseReference starCountRef =
+          FirebaseDatabase.instance.ref('todo/$userName');
+      starCountRef.onValue.listen((DatabaseEvent event) {
+        var data = event.snapshot.value;
+
+        print(data);
+      });
+    } catch (e) {
+      print("could not get");
+    }
+  }
 
   @override
   void onInit() {
     currentUser = currentUser!.replaceAll('.', '');
-    String originalText = 'Hello@World.com';
-    String modifiedText = originalText.replaceAll('.', '');
+
     print(currentUser);
+    getTodos(currentUser);
     super.onInit();
   }
 

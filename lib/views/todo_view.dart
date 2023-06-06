@@ -130,8 +130,6 @@ class TodoView extends GetView<TodoController> {
                     ),
                   ),
                 ),
-                GetBuilder<TodoController>(
-                    builder: (controller) => Text(controller.demo.toString()))
               ],
             ),
           ),
