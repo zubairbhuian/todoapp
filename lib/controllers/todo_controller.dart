@@ -3,15 +3,18 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:todoapp/models/todo.dart';
 import 'package:todoapp/widgets/common_func.dart';
+import 'package:uuid/uuid.dart';
 
 class TodoController extends GetxController {
   static TodoController get to => Get.find();
   String? currentUser = FirebaseAuth.instance.currentUser!.email;
   final db = FirebaseFirestore.instance;
+  String uuid = const Uuid().v4();
 
   TextEditingController todoTitle = TextEditingController();
   TextEditingController todoDes = TextEditingController();
@@ -21,7 +24,7 @@ class TodoController extends GetxController {
   Map<String, dynamic> todosList = {};
 
   // !======  Add Todos  ========
-  void addTodo(String id, String? userName) async {
+  void addTodo(String? userName) async {
     // ### Check inputField
     if (todoTitle.text.isNotEmpty && todoDes.text.isNotEmpty) {
       // ## Loading on
@@ -29,7 +32,7 @@ class TodoController extends GetxController {
       update();
       // ## Model Data
       var data = TodoModel(
-          id: id.toLowerCase().trim(),
+          id: uuid,
           title: todoTitle.text.trim(),
           body: todoDes.text.trim(),
           addtime: Timestamp.now());
@@ -41,18 +44,20 @@ class TodoController extends GetxController {
             toFirestore: (TodoModel userData, options) =>
                 userData.toFirestore(),
           )
-          .where("id", isEqualTo: id.toLowerCase().trim())
+          .where("title", isEqualTo: todoTitle.text.trim())
           .get();
       // Add todos if it is not exidt
       if (todoDatabase.docs.isEmpty) {
         await db
             .collection(userName)
-            .doc(id.toLowerCase().trim())
+            .doc(uuid)
             .withConverter(
               fromFirestore: TodoModel.fromFirestore,
               toFirestore: (TodoModel todos, options) => todos.toFirestore(),
             )
             .set(data);
+        // Create New UUID
+        uuid =const Uuid().v4();
         // Close the model
         Get.back();
         // loading off

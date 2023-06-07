@@ -185,7 +185,6 @@ class TodoView extends GetView<TodoController> {
                                           ? null
                                           : () {
                                               controller.addTodo(
-                                                  controller.todoTitle.text,
                                                   controller.currentUser);
                                             },
                                       style: ElevatedButton.styleFrom(
