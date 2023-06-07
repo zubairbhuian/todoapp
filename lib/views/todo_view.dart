@@ -4,7 +4,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:todoapp/controllers/todo_controller.dart';
 import 'package:todoapp/core/utils/app_color.dart';
-import 'package:todoapp/widgets/custom_text.dart';
+import 'package:todoapp/widgets/custom_widgets.dart';
+import 'package:todoapp/widgets/dialogs.dart';
 
 class TodoView extends GetView<TodoController> {
   const TodoView({super.key});
@@ -36,121 +37,35 @@ class TodoView extends GetView<TodoController> {
                           snapshot.data!.docs.map((DocumentSnapshot document) {
                         Map<String, dynamic> data =
                             document.data() as Map<String, dynamic>;
-                        return Container(
-                          width: 120.sw,
-                          margin: EdgeInsets.only(bottom: 10.h),
-                          padding: EdgeInsets.all(15.w),
-                          decoration: BoxDecoration(
-                              color: const Color.fromARGB(62, 167, 11, 214),
-                              borderRadius: BorderRadius.circular(12.r)),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              RegularText(
-                                text: data['title'],
-                                fontSize: 19.sp,
-                                fontWeight: FontWeight.w600,
-                              ),
-                              const Divider(
-                                thickness: 1,
-                                color: Color.fromARGB(255, 105, 105, 105),
-                              ),
-                              RegularText(text: data['body']),
-                              SizedBox(
-                                height: 10.w,
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  GestureDetector(
-                                    child: Container(
-                                      width: 35.w,
-                                      height: 35.w,
-                                      decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(4.r),
-                                        color: const Color.fromARGB(
-                                            164, 169, 24, 226),
-                                      ),
-                                      child: const Icon(
-                                        Icons.edit,
-                                        color: AppColor.white,
-                                      ),
-                                    ),
-                                    onTap: () {},
-                                  ),
-                                  SizedBox(
-                                    width: 10.w,
-                                  ),
-                                  GestureDetector(
-                                    child: Container(
-                                      width: 35.w,
-                                      height: 35.w,
-                                      decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(4.r),
-                                        color: const Color.fromARGB(
-                                            164, 169, 24, 226),
-                                      ),
-                                      child: const Icon(
-                                        Icons.delete,
-                                        color: AppColor.white,
-                                      ),
-                                    ),
-                                    onTap: () {
-                                      Get.defaultDialog(
-                                          content: Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 10),
-                                        child: Column(
-                                          children: [
-                                            const RegularText(
-                                                textAlign: TextAlign.center,
-                                                text:
-                                                    'Are you sure you want to delete the documents?'),
-                                            SizedBox(
-                                              height: 10.w,
-                                            ),
-                                            SizedBox(
-                                              width: 120.sw,
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: [
-                                                  ElevatedButton(
-                                                      onPressed: () {
-                                                        Get.back();
-                                                      },
-                                                      child: const RegularText(
-                                                        text: 'No',
-                                                        color: AppColor.white,
-                                                      )),
-                                                  SizedBox(
-                                                    width: 20.w,
-                                                  ),
-                                                  ElevatedButton(
-                                                      onPressed: () {
-                                                        controller.deleteTodo(
-                                                            data['id']);
-                                                        Get.back();
-                                                      },
-                                                      child: const RegularText(
-                                                          text: 'Yes',
-                                                          color:
-                                                              AppColor.white)),
-                                                ],
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      ));
-                                    },
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        );
+                        return TodosCard(
+                            title: data['title'],
+                            body: data['body'],
+                            lastEdit: '',
+                            onEdit: () => {
+                                  controller.todoTitle = TextEditingController(
+                                      text: data['title']),
+                                  controller.todoDes =
+                                      TextEditingController(text: data['body']),
+                                  todosDialog(
+                                      btnText: 'Update',
+                                      todoTitle: controller.todoTitle,
+                                      todoDes: controller.todoDes,
+                                      onPressed: () {
+                                        controller.todoUpdate(data['id']);
+                                      }),
+                                },
+                            onDelete: () => {
+                                  permissionDialog(
+                                      msg:
+                                          're you sure you want to delete the documents?',
+                                      onCancel: () {
+                                        Get.back();
+                                      },
+                                      onConfirm: () {
+                                        controller.deleteTodo(data['id']);
+                                        Get.back();
+                                      })
+                                });
                       }).toList(),
                     );
                   },
@@ -164,48 +79,13 @@ class TodoView extends GetView<TodoController> {
                     style: ElevatedButton.styleFrom(
                         padding: EdgeInsets.symmetric(vertical: 6.h)),
                     onPressed: () {
-                      Get.defaultDialog(
-                        content: Padding(
-                          padding: const EdgeInsets.all(10),
-                          child: Column(
-                            children: [
-                              TextField(
-                                autofocus: true,
-                                controller: controller.todoTitle,
-                              ),
-                              TextField(
-                                controller: controller.todoDes,
-                              ),
-                              const SizedBox(
-                                height: 30,
-                              ),
-                              GetBuilder<TodoController>(
-                                  builder: (controller) => ElevatedButton(
-                                      onPressed: controller.isButtonDisabled
-                                          ? null
-                                          : () {
-                                              controller.addTodo(
-                                                  controller.currentUser);
-                                            },
-                                      style: ElevatedButton.styleFrom(
-                                          backgroundColor: AppColor.primary),
-                                      child: controller.isButtonDisabled
-                                          ? const SizedBox(
-                                              width: 20,
-                                              height: 20,
-
-                                              // padding: const EdgeInsets.all(22.0),
-                                              child: CircularProgressIndicator(
-                                                  strokeWidth: 2),
-                                            )
-                                          : const Text(
-                                              'Add',
-                                              style: TextStyle(
-                                                  color: AppColor.white),
-                                            )))
-                            ],
-                          ),
-                        ),
+                      todosDialog(
+                        btnText: 'Add',
+                        todoTitle: controller.todoTitle,
+                        todoDes: controller.todoDes,
+                        onPressed: () {
+                          controller.addTodo(controller.currentUser);
+                        },
                       );
                     },
                     child: const Icon(

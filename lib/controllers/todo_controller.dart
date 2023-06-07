@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -12,6 +11,7 @@ import 'package:uuid/uuid.dart';
 
 class TodoController extends GetxController {
   static TodoController get to => Get.find();
+
   String? currentUser = FirebaseAuth.instance.currentUser!.email;
   final db = FirebaseFirestore.instance;
   String uuid = const Uuid().v4();
@@ -20,9 +20,7 @@ class TodoController extends GetxController {
   TextEditingController todoDes = TextEditingController();
 
   bool isButtonDisabled = false;
-
-  Map<String, dynamic> todosList = {};
-
+  
   // !======  Add Todos  ========
   void addTodo(String? userName) async {
     // ### Check inputField
@@ -57,7 +55,7 @@ class TodoController extends GetxController {
             )
             .set(data);
         // Create New UUID
-        uuid =const Uuid().v4();
+        uuid = const Uuid().v4();
         // Close the model
         Get.back();
         // loading off
@@ -82,21 +80,6 @@ class TodoController extends GetxController {
     }
   }
 
-  // !=====  Update Todo  ======
-  void updateTodos(String? userName) {
-    try {
-      DatabaseReference starCountRef =
-          FirebaseDatabase.instance.ref('todo/$userName');
-      starCountRef.onValue.listen((DatabaseEvent event) {
-        var data = event.snapshot.value;
-
-        print(data);
-      });
-    } catch (e) {
-      print("could not get");
-    }
-  }
-
   //  !===== Delete todo =======
   void deleteTodo(String id) async {
     try {
@@ -105,6 +88,38 @@ class TodoController extends GetxController {
     } catch (e) {
       customSnackbar(msg: 'Oops! there is a problem, please try again later');
       log('Error deleting document: $e');
+    }
+  }
+
+  // !==== todoUpdate ======
+  void todoUpdate(String id) async {
+    // ### Check inputField
+    if (todoTitle.text.isNotEmpty && todoDes.text.isNotEmpty) {
+      // ## Loading on
+      isButtonDisabled = true;
+      update();
+      try {
+        var data = TodoModel(
+            id: id,
+            title: todoTitle.text.trim(),
+            body: todoDes.text.trim(),
+            addtime: Timestamp.now());
+        await db
+            .collection(currentUser!)
+            .doc(id)
+            .withConverter(
+              fromFirestore: TodoModel.fromFirestore,
+              toFirestore: (TodoModel todos, options) => todos.toFirestore(),
+            )
+            .set(data);
+        Get.back();
+        customSnackbar(msg: 'Document updated successfully.');
+      } catch (e) {
+        customSnackbar(msg: 'Oops! there is a problem, please try again later');
+        log('Error updating document: $e');
+      }
+      isButtonDisabled = false;
+      update();
     }
   }
 

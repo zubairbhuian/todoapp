@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:todoapp/core/utils/app_color.dart';
 
@@ -33,5 +34,30 @@ class CustomBtn extends StatelessWidget {
             child: Text(
           title,
         )));
+  }
+}
+
+class TodosBtn extends StatelessWidget {
+  final IconData icon;
+  final VoidCallback onTap;
+  const TodosBtn({super.key, required this.icon, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 35.w,
+        height: 35.w,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(4.r),
+          color: const Color.fromARGB(164, 169, 24, 226),
+        ),
+        child: Icon(
+          icon,
+          color: AppColor.white,
+        ),
+      ),
+    );
   }
 }

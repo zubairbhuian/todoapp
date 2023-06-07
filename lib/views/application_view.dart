@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:todoapp/controllers/application_controller.dart';
 import 'package:todoapp/views/Products_view.dart';
 import 'package:todoapp/views/payment_view.dart';
+import 'package:todoapp/views/profile_view.dart';
 
 import 'package:todoapp/views/todo_view.dart';
 
@@ -15,6 +16,7 @@ class ApplicationView extends GetView<ApplicationController> {
       const ProductsView(),
       const TodoView(),
       const PaymentView(),
+      const ProfileView()
     ];
 
     return GetBuilder<ApplicationController>(
@@ -38,6 +40,10 @@ class ApplicationView extends GetView<ApplicationController> {
                   ),
                   BottomNavigationBarItem(
                     icon: Icon(Icons.payment),
+                    label: 'Donate Us',
+                  ),
+                   BottomNavigationBarItem(
+                    icon: Icon(Icons.person),
                     label: 'Donate Us',
                   ),
                 ],

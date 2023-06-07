@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:todoapp/core/utils/app_constant.dart';
 
 class ApplicationController extends GetxController {
-  int pageIndex = 1;
+  int pageIndex = 3;
   List products = [];
   bool isLoading = false;
 
