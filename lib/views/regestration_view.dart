@@ -6,7 +6,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:todoapp/controllers/regestration_controller.dart';
 
 import '../core/routes/app_routes.dart';
-import '../core/routes/pages.dart';
 import '../core/utils/app_color.dart';
 import '../widgets/custom_appbar_shape.dart';
 import '../widgets/custom_btn.dart';

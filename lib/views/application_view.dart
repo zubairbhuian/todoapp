@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:todoapp/controllers/application_controller.dart';
 import 'package:todoapp/views/Products_view.dart';
-import 'package:todoapp/views/payment_view.dart';
-import 'package:todoapp/views/profile_view.dart';
 
 import 'package:todoapp/views/todo_view.dart';
 
@@ -13,10 +11,8 @@ class ApplicationView extends GetView<ApplicationController> {
   @override
   Widget build(BuildContext context) {
     final List<Widget> pages = [
-      const ProductsView(),
       const TodoView(),
-      const PaymentView(),
-      const ProfileView()
+      const ProductsView(),
     ];
 
     return GetBuilder<ApplicationController>(
@@ -31,20 +27,12 @@ class ApplicationView extends GetView<ApplicationController> {
                 },
                 items: const [
                   BottomNavigationBarItem(
-                    icon: Icon(Icons.production_quantity_limits),
-                    label: 'Products',
-                  ),
-                  BottomNavigationBarItem(
                     icon: Icon(Icons.message),
                     label: 'Todos',
                   ),
                   BottomNavigationBarItem(
-                    icon: Icon(Icons.payment),
-                    label: 'Donate Us',
-                  ),
-                   BottomNavigationBarItem(
-                    icon: Icon(Icons.person),
-                    label: 'Donate Us',
+                    icon: Icon(Icons.production_quantity_limits),
+                    label: 'Products',
                   ),
                 ],
               ),
